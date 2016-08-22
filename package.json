@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "collider-gui",
   "productName": "Collider",
   "version": "0.1.0",
