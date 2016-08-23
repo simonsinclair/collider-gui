@@ -1,0 +1,43 @@
+// _index.scss
+//
+
+.window {
+
+}
+.window__pane {
+
+}
+
+.header {
+  border-bottom: 1px solid;
+}
+
+/**
+ * MAIN CONTENT
+ * 1. Grow to fill space.
+ */
+.main {
+  flex: 1; // [1]
+}
+  .main__nav {
+    display: flex;
+    justify-content: space-between;
+  }
+
+
+/**
+ * ASIDE CONTENT
+ * 1. Grow to fill space, pushing version to the bottom.
+ */
+.aside {
+  background: #F1F1F1;
+
+  display: flex;
+  flex-direction: column;
+}
+  .aside__project {
+    flex: 1; // [1]
+  }
+  .aside__version {
+    text-align: center;
+  }
