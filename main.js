@@ -21,7 +21,6 @@ function createMainWindow() {
 	var win = new electron.BrowserWindow({
 		width: 800,
 		height: 600,
-		titleBarStyle: 'hidden',
 	});
 
 	win.loadURL(`file://${__dirname}/index.html`);
