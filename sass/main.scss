@@ -25,6 +25,10 @@ body {
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 .window {
   position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
@@ -42,6 +46,7 @@ body {
   > li {
     float: left;
   }
+  a {}
 }
 
 @import 'index';

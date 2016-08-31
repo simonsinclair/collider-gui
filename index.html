@@ -7,30 +7,120 @@
 	</head>
 	<body>
 
-		<div class="window">
-			<header class="toolbar toolbar-header">
-				<h1 class="title">Collider</h1>
-			</header>
+		<div id="app" class="window">
 
-			<div class="window-content">
-				<div class="padded-more">
-					<pre class="console" id="js-console">Console.</pre>
-				</div>
-			</div>
+      <!-- Left -->
+      <div class="window__pane aside">
+        <div class="header">
+          <h2>Projects</h2>
+          <button v-on:click="send('project-new')">New</button>
+          <button v-on:click="send('project-open')">Open</button>
+        </div>
 
-			<footer class="toolbar toolbar-footer">
-			  <div class="toolbar-actions">
-			    <button id="js-open" class="btn btn-default">
-			      Open
-			    </button>
+        <div class="aside__project">
+          <ul v-if="state.isLoaded">
+            <li>{{ state.project.name }}</li>
+            <li>{{ state.project.author }}</li>
+          </ul>
+        </div>
 
-			    <button id="js-run-stop" class="btn btn-primary pull-right" disabled="">
-			      Run
-			    </button>
-			  </div>
-			</footer>
+        <p class="aside__version">{{ collider.version }}</p>
+      </div>
+
+
+      <!-- Right -->
+      <div class="window__pane main">
+
+        <div v-if="state.isLoaded" class="main__inner">
+            <div class="header">
+              <h1>{{ state.project.name }}</h1>
+              <p>{{ state.project.author }}</p>
+              <p>{{ state.location.rel }}</p>
+
+              <div class="main__nav">
+                <ul class="nav-list">
+                  <li v-bind:class="{ 'active' : state.workspaceView === 'matter' }">
+                    <a v-on:click.prevent="state.workspaceView = 'matter'" href="#">Matter</a>
+                  </li>
+                  <li v-bind:class="{ 'active' : state.workspaceView === 'generate' }">
+                    <a v-on:click.prevent="state.workspaceView = 'generate'" href="#">Generate</a>
+                  </li>
+                  <li v-bind:class="{ 'active' : state.workspaceView === 'log' }">
+                    <a v-on:click.prevent="state.workspaceView = 'log'" href="#">Log</a>
+                  </li>
+                </ul>
+
+                <ul class="nav-list">
+                  <li><button>Update</button></li>
+                  <li><button v-on:click="send('project-run-stop')">{{ state.isRunning ? 'Stop' : 'Run' }}</button></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="workspace">
+              <component
+                :is="'workspace-'+state.workspaceView"
+                keep-alive="">
+              </component>
+            </div>
+        </div>
+
+        <div v-else="" class="main__inner">
+          <p>Empty</p>
+        </div>
+
+      </div>
+
+      <!--
+      <modal v-show="state.showingNewProjectModal">
+        <div class="modal__header">
+          <h2>New Project</h2>
+        </div>
+        <div class="modal__body">
+          <form v-on:submit.prevent="saveNewProject">
+            <ul>
+              <li><label>Name <input v-model="newProject.name" type="text" name="name" autofocus="" /></label></li>
+              <li><label>Author <input v-model="newProject.author" type="text" name="author" /></label></li>
+              <li>
+                <button v-on:click="state.showingNewProjectModal = false" type="button">Cancel</button>
+                <button type="submit">OK</button>
+              </li>
+            </ul>
+          </form>
+        </div>
+      </modal>
+      -->
 
 		</div>
+
+
+    <!-- Project sub-views. -->
+    <template id="workspace-matter-tpl">
+      <div class="workspace__matter">
+        <p>Workspace - Matter</p>
+      </div>
+    </template>
+
+    <template id="workspace-generate-tpl">
+      <div class="workspace__generate">
+        <p>Workspace - Generate</p>
+      </div>
+    </template>
+
+    <template id="workspace-log-tpl">
+      <div class="workspace__log">
+        <pre>{{ text }}</pre>
+      </div>
+    </template>
+
+    <!-- Components. -->
+    <template id="modal-tpl">
+      <div class="modal">
+        <div class="modal__inner">
+          <slot></slot>
+        </div>
+      </div>
+    </template>
 
 		<script src="index.js"></script>
 	</body>
