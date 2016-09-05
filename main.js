@@ -82,8 +82,8 @@ app.on('ready', function () {
             type: 'error',
             buttons: ['Okay'],
             defaultId: 0,
-            message: 'Sorry, there was a problem opening that.',
-            detail: 'Please make sure it was a Collider project.',
+            message: "Unable to open the selected directory.",
+            detail: "Please make sure it's a Collider project.",
           });
         }
       });
@@ -104,7 +104,7 @@ app.on('ready', function () {
       var newProjectDir = filename;
       var newProjectDirParsed = path.parse(newProjectDir);
 
-      cmds.new({
+      var cmd = cmds.new({
         name: newProjectDirParsed.name,
         dir: newProjectDirParsed.dir,
         author: 'Unknown',
@@ -120,6 +120,10 @@ app.on('ready', function () {
           projectDir = newProjectDir;
           mainWindow.webContents.send('did-open-project', projectDir, data);
         });
+      });
+
+      cmd.on('download:progress', function (progress) {
+        mainWindow.webContents.send('download:progress', progress);
       });
     });
   })

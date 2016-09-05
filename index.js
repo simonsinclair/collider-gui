@@ -28,36 +28,77 @@ var state = {
 
   logText: '',
 
+  matterLibs: [],
+
   // 'collider.json' contents.
   project: {},
 
-  showingNewProjectModal: false,
-
   workspaceView: 'matter',
+
+  download: {
+    progress: 0
+  },
 };
 
 
 // VIEWS
 //
 
+// ADD/REMOVE MATTER
+//
+
 Vue.component('workspace-matter', {
   template: '#workspace-matter-tpl',
+
+  props: ['matterLibs'],
+
+  methods: {
+    addRemoveLib: function (id) {
+      console.log(id);
+    }
+  },
 });
+
+
+// GENERATE MATTER
+//
 
 Vue.component('workspace-generate', {
   template: '#workspace-generate-tpl',
+
+  data: function () {
+    return {
+      type: '',
+      name: '',
+      usesData: false,
+      destLib: '',
+    }
+  },
+
+  methods: {
+    generate: function () {
+      console.log(this.type, this.name, this.usesData, this.destLib);
+    }
+  },
 });
+
+
+// CONSOLE/LOG
+//
 
 Vue.component('workspace-log', {
   template: '#workspace-log-tpl',
+
   data: function () {
     return { text: '' }
   },
+
   methods: {
     updateScrollTop: function () {
       this.$el.scrollTop = this.$el.offsetHeight;
     }
   },
+
   events: {
     'log-change': function (str) {
       this.text += str;
@@ -68,7 +109,7 @@ Vue.component('workspace-log', {
         this.updateScrollTop();
       });
     }
-  }
+  },
 });
 
 
@@ -88,13 +129,35 @@ var app = new Vue({
 
   data: {
     state: state,
+
     collider: {
       version: pkg.version
     },
   },
 
+  // Lifecycle Hook -
+  // At this stage all directives have been linked
+  // so data changes will trigger DOM updates.
+  compiled: function() {
+    var app = this;
+    $.get('http://getcollider.com/matter.json', function (data, status) {
+      if (status === 'success') {
+        app.state.matterLibs = data.libs;
+      }
+    }, 'json');
+  },
+
   methods: {
-    send: ipcRenderer.send
+    send: ipcRenderer.send,
+
+    projectRunStop: function () {
+      this.send('project-run-stop');
+
+      // Switch to the log on project run.
+      if (!this.state.isRunning) {
+        this.state.workspaceView = 'log';
+      }
+    },
   },
 });
 
@@ -102,6 +165,10 @@ var app = new Vue({
 
 // EVENTS
 //
+
+ipcRenderer.on('download:progress', function (e, progress) {
+  state.download.progress = progress;
+});
 
 // Fired on:
 // - New, and
