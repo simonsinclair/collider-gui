@@ -61,6 +61,7 @@
               <component
                 :is="'workspace-'+state.workspaceView"
                 :state="state"
+                :send="send"
                 keep-alive="">
               </component>
             </div>
@@ -92,8 +93,8 @@
         <ul>
           <li v-for="lib in state.matterLibIndex">
             <h2>{{ lib.title }}</h2>
-            <button v-show="!isLibAdded(lib.id)" v-on:click="addLib(lib.id)">Add</button>
-            <button v-else="" v-on:click="removeLib(lib.id)">Remove</button>
+            <button v-show="!isLibAdded(lib.id)" v-on:click="send('matter:add', lib.id)">Add</button>
+            <button v-else="" v-on:click="send('matter:remove', lib.id)">Remove</button>
           </li>
         </ul>
       </div>

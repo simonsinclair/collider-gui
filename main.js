@@ -158,4 +158,29 @@ app.on('ready', function () {
 			mainWindow.webContents.send('did-stop-project', code, signal);
 		});
 	});
+
+  ipcMain.on('matter:add', function (e, id) {
+    collider.load(projectDir, function (err, project) {
+      if (err) throw err;
+
+      project.matterLibs.push(id);
+      collider.save(projectDir, project, function (err) {
+        if (err) throw err;
+        mainWindow.webContents.send('project:updated', data);
+      });
+    });
+  });
+
+  ipcMain.on('matter:remove', function (e, id) {
+    collider.load(projectDir, function (err, project) {
+      if (err) throw err;
+
+      project.matterLibs.push(id);
+      collider.save(projectDir, project, function (err) {
+        if (err) throw err;
+        mainWindow.webContents.send('project:updated', data);
+      });
+    });
+  });
+
 });

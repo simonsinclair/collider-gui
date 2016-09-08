@@ -50,7 +50,7 @@ var state = {
 Vue.component('workspace-matter', {
   template: '#workspace-matter-tpl',
 
-  props: ['state'],
+  props: ['state', 'send'],
 
   methods: {
     isLibAdded: function (id) {
@@ -62,11 +62,11 @@ Vue.component('workspace-matter', {
     },
 
     addLib: function (id) {
-      console.log(id);
+      console.log(this);
     },
 
     removeLib: function (id) {
-      console.log(id);
+      console.log(this);
     },
   },
 });
@@ -209,4 +209,8 @@ ipcRenderer.on('logOut', function (e, str) {
 
 ipcRenderer.on('logErr', function (e, str) {
   app.$broadcast('log-change', str);
+});
+
+ipcRenderer.on('project:updated', function (e, data) {
+  state.project = data;
 });
