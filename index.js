@@ -28,7 +28,7 @@ var state = {
 
   logText: '',
 
-  matterLibs: [],
+  matterLibIndex: [],
 
   // 'collider.json' contents.
   project: {},
@@ -154,7 +154,7 @@ var app = new Vue({
     var app = this;
     $.get('http://getcollider.com/matter.json', function (data, status) {
       if (status === 'success') {
-        app.state.matterLibs = data.libs;
+        app.state.matterLibIndex = data.libs;
       }
     }, 'json');
   },
