@@ -53,9 +53,21 @@ Vue.component('workspace-matter', {
   props: ['state'],
 
   methods: {
-    addRemoveLib: function (id) {
+    isLibAdded: function (id) {
+      var idxOfLib = this.state.project.matterLibs.indexOf(id);
+      if (idxOfLib !== -1) {
+        return true;
+      }
+      return false;
+    },
+
+    addLib: function (id) {
       console.log(id);
-    }
+    },
+
+    removeLib: function (id) {
+      console.log(id);
+    },
   },
 });
 
