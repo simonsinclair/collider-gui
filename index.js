@@ -112,7 +112,7 @@ Vue.component('workspace-log', {
   },
 
   events: {
-    'log-change': function (str) {
+    'log:change': function (str) {
       this.text += str;
 
       // Wait for Vue to update the DOM
@@ -204,11 +204,11 @@ ipcRenderer.on('did-stop-project', function (e, args) {
 
 // Log.
 ipcRenderer.on('logOut', function (e, str) {
-  app.$broadcast('log-change', str);
+  app.$broadcast('log:change', str);
 });
 
 ipcRenderer.on('logErr', function (e, str) {
-  app.$broadcast('log-change', str);
+  app.$broadcast('log:change', str);
 });
 
 ipcRenderer.on('project:updated', function (e, data) {
