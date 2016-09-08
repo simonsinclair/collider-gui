@@ -18,7 +18,7 @@
         </div>
 
         <div class="aside__project">
-          <ul v-show="state.isLoaded">
+          <ul v-if="state.isLoaded">
             <li>{{ state.project.name }}</li>
             <li>{{ state.project.author }}</li>
           </ul>
@@ -31,7 +31,7 @@
       <!-- Right -->
       <div class="window__pane main">
 
-        <div v-show="state.isLoaded" class="main__inner">
+        <div v-if="state.isLoaded" class="main__inner">
             <div class="header">
               <h1>{{ state.project.name }}</h1>
               <p>{{ state.project.author }}</p>
