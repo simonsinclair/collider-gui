@@ -60,7 +60,7 @@
             <div class="workspace">
               <component
                 :is="'workspace-'+state.workspaceView"
-                :matter-libs="state.matterLibs"
+                :state="state"
                 keep-alive="">
               </component>
             </div>
@@ -90,7 +90,7 @@
       <div class="workspace__matter">
         <p>Manage external Matter libraries in your project.</p>
         <ul>
-          <li v-for="lib in matterLibs">
+          <li v-for="lib in state.matterLibIndex">
             <h2>{{ lib.title }}</h2>
             <button v-on:click="addRemoveLib(lib.id)">Add/Remove</button>
           </li>

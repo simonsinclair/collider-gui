@@ -50,7 +50,7 @@ var state = {
 Vue.component('workspace-matter', {
   template: '#workspace-matter-tpl',
 
-  props: ['matterLibs'],
+  props: ['state'],
 
   methods: {
     addRemoveLib: function (id) {
