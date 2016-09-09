@@ -2,6 +2,7 @@
 
 var collider = require('./lib/collider');
 var cmds = require('./lib/commands');
+var matter = require('./lib/matter');
 
 // Electron
 var electron = require('electron');
@@ -9,6 +10,7 @@ var app      = electron.app;
 var ipcMain  = electron.ipcMain;
 var dialog   = electron.dialog;
 
+var _ = require('lodash');
 var os = require('os');
 var path = require('path');
 
@@ -54,10 +56,11 @@ app.on('ready', function () {
 	// Collider
 	//
 
+  var project = {};
 	var projectDir = '';
 	var projectRunning = false;
 
-	var gulp;
+	var gulp = null;
 
 
 	// EVENTS
@@ -129,56 +132,81 @@ app.on('ready', function () {
   })
 
 	ipcMain.on('project-run-stop', function () {
-		if (projectRunning) {
-			gulp.kill();
-		} else {
-			gulp = spawn(
-				`${projectDir}/node_modules/.bin/gulp`,
-				['--cwd', projectDir, '--no-color', 'default']
-			);
 
-			projectRunning = true;
-			mainWindow.webContents.send('did-run-project');
-		}
+    // TO DO: Run button needs to have an in process state,
+    //        that prevents people from clicking it
+    //        repeatedly, to prevent errors.
 
-		gulp.stdout.on('data', function (data) {
-			mainWindow.webContents.send('logOut', data.toString());
-		});
+    if (projectRunning) {
 
-		gulp.stderr.on('data', function (data) {
-			mainWindow.webContents.send('logErr', data.toString());
-		});
+      gulp.kill();
 
-		gulp.on('error', function (err) {
-			mainWindow.webContents.send('logErr', err);
-		});
+    } else {
 
-		gulp.on('close', function (code, signal) {
-			projectRunning = false;
-			mainWindow.webContents.send('did-stop-project', code, signal);
-		});
+      // Start.
+      var cmd = cmds.run(projectDir, function (err, _gulp) {
+        if (err) throw err;
+
+        gulp = _gulp;
+        projectRunning = true;
+        mainWindow.webContents.send('did-run-project');
+      });
+
+      // On Stop.
+      cmd.on('run:gulp-close', function (code, signal) {
+        gulp = null;
+        projectRunning = false;
+        mainWindow.webContents.send('did-stop-project', code, signal);
+      });
+
+      // Log events.
+      cmd.on('run:gulp-stdout', function (str) {
+        mainWindow.webContents.send('logOut', str);
+      });
+
+      cmd.on('run:gulp-stderr', function (str) {
+        mainWindow.webContents.send('logErr', str);
+      });
+
+      // Process error.
+      // - The process could not be spawned, or
+      // - The process could not be killed
+      cmd.on('run:gulp-error', function (err) {
+        throw err;
+      });
+
+    }
 	});
 
-  ipcMain.on('matter:add', function (e, id) {
+  ipcMain.on('matter:add', function (e, libId) {
     collider.load(projectDir, function (err, project) {
       if (err) throw err;
 
-      project.matterLibs.push(id);
+      project.matterLibs.push(libId);
       collider.save(projectDir, project, function (err) {
         if (err) throw err;
-        mainWindow.webContents.send('project:updated', data);
+        mainWindow.webContents.send('project:updated', project);
       });
     });
   });
 
-  ipcMain.on('matter:remove', function (e, id) {
+  ipcMain.on('matter:remove', function (e, libId) {
     collider.load(projectDir, function (err, project) {
       if (err) throw err;
 
-      project.matterLibs.push(id);
-      collider.save(projectDir, project, function (err) {
-        if (err) throw err;
-        mainWindow.webContents.send('project:updated', data);
+      matter.getLibIndex(function (err, matterLibIndex) {
+        var libInfo = matter.getLibInfo(matterLibIndex, libId);
+
+        matter.clean(projectDir, libInfo, function (err) {
+          _.remove(project.matterLibs, function (item) {
+            return item === libId;
+          });
+
+          collider.save(projectDir, project, function (err) {
+            if (err) throw err;
+            mainWindow.webContents.send('project:updated', project);
+          });
+        });
       });
     });
   });

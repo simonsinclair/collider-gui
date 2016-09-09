@@ -62,11 +62,11 @@ Vue.component('workspace-matter', {
     },
 
     addLib: function (id) {
-      console.log(this);
+      this.send('matter:add', id);
     },
 
     removeLib: function (id) {
-      console.log(this);
+      this.send('matter:remove', id);
     },
   },
 });
