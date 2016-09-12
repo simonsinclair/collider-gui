@@ -111,8 +111,8 @@ Vue.component('workspace-log', {
   },
 
   methods: {
-    updateScrollTop: function () {
-      this.$el.scrollTop = this.$el.offsetHeight;
+    updateScrollTop: function (scroll) {
+      this.$el.scrollTop = this.$el.scrollHeight;
     }
   },
 
@@ -122,9 +122,7 @@ Vue.component('workspace-log', {
 
       // Wait for Vue to update the DOM
       // before calling updateScrollTop().
-      this.$nextTick(function () {
-        this.updateScrollTop();
-      });
+      this.$nextTick(this.updateScrollTop);
     }
   },
 });
