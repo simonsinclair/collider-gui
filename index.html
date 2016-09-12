@@ -52,7 +52,13 @@
 
                 <ul class="nav-list">
                   <li><button disabled="">Update</button></li>
-                  <li><button v-on:click="projectRunStop">{{ state.isRunning ? 'Stop' : 'Run' }}</button></li>
+                  <li>
+                    <button
+                      v-on:click="projectRunStop"
+                      v-bind:disabled="state.isStartingProject">
+                        {{ state.isRunning ? 'Stop' : 'Run' }}
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>

@@ -21,6 +21,7 @@ Vue.config.debug = true;
 //
 
 var state = {
+  isStartingProject: false,
   isRunning: false,
   isLoaded: false,
 
@@ -194,14 +195,6 @@ ipcRenderer.on('did-open-project', function (e, dir, data) {
   state.project = data;
 });
 
-ipcRenderer.on('did-run-project', function (e, args) {
-	state.isRunning = true;
-});
-
-ipcRenderer.on('did-stop-project', function (e, args) {
-	state.isRunning = false;
-});
-
 // Log.
 ipcRenderer.on('logOut', function (e, str) {
   app.$broadcast('log:change', str);
@@ -213,4 +206,18 @@ ipcRenderer.on('logErr', function (e, str) {
 
 ipcRenderer.on('project:updated', function (e, data) {
   state.project = data;
+});
+
+// Run
+ipcRenderer.on('starting-project', function (e, data) {
+  state.isStartingProject = true;
+});
+
+ipcRenderer.on('did-run-project', function (e, args) {
+  state.isStartingProject = false;
+  state.isRunning = true;
+});
+
+ipcRenderer.on('did-stop-project', function (e, args) {
+  state.isRunning = false;
 });

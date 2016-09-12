@@ -143,6 +143,9 @@ app.on('ready', function () {
 
     } else {
 
+      // Intermediate state.
+      mainWindow.webContents.send('starting-project');
+
       // Start.
       var cmd = cmds.run(projectDir, function (err, _gulp) {
         if (err) throw err;
