@@ -39,6 +39,10 @@ var state = {
   download: {
     progress: 0
   },
+
+  extract: {
+    progress: 0
+  },
 };
 
 
@@ -181,6 +185,10 @@ var app = new Vue({
 
 ipcRenderer.on('download:progress', function (e, progress) {
   state.download.progress = progress;
+});
+
+ipcRenderer.on('extract:progress', function (e, progress) {
+  state.extract.progress = progress;
 });
 
 // Fired on:

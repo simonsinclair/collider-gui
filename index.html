@@ -89,6 +89,15 @@
         </div>
       </modal>
 
+      <modal v-show="state.extract.progress > 0 && state.extract.progress < 100">
+        <div class="modal__header">
+          <h2>Extracting&hellip;</h2>
+        </div>
+        <div class="modal__body">
+          <progress v-bind:value="state.extract.progress" max="100"></progress>
+        </div>
+      </modal>
+
 		</div>
 
 

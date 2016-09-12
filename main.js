@@ -128,6 +128,10 @@ app.on('ready', function () {
       cmd.on('download:progress', function (progress) {
         mainWindow.webContents.send('download:progress', progress);
       });
+
+      cmd.on('extract:progress', function (progress) {
+        mainWindow.webContents.send('extract:progress', progress);
+      });
     });
   })
 
