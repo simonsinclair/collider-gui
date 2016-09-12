@@ -35,7 +35,7 @@
             <div class="header">
               <h1>{{ state.project.name }}</h1>
               <p>{{ state.project.author }}</p>
-              <p>{{ state.location.rel }}</p>
+              <p>Location: <a v-on:click.prevent="showItem(state.location.abs)" href="#">{{ state.location.rel }}</a></p>
 
               <div class="main__nav">
                 <ul class="nav-list">

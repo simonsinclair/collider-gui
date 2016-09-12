@@ -8,6 +8,7 @@ var pkg = require('./package.json');
 // Electron.
 var electron = require('electron');
 var ipcRenderer = electron.ipcRenderer;
+var shell = electron.shell;
 
 var tildify = require('tildify');
 var Vue = require('vue');
@@ -177,6 +178,7 @@ var app = new Vue({
 
   methods: {
     send: ipcRenderer.send,
+    showItem: shell.showItemInFolder,
 
     projectRunStop: function () {
       this.send('project-run-stop');
