@@ -83,18 +83,31 @@ Vue.component('workspace-matter', {
 Vue.component('workspace-generate', {
   template: '#workspace-generate-tpl',
 
+  props: ['send'],
+
   data: function () {
     return {
       type: '',
       name: '',
+      locale: '',
       usesData: false,
-      destLib: '',
     }
   },
 
   methods: {
     generate: function () {
-      console.log(this.type, this.name, this.usesData, this.destLib);
+      this.send('generate', {
+        type: this.type,
+        name: this.name,
+        locale: this.locale,
+        usesData: this.usesData,
+      });
+    }
+  },
+
+  events: {
+    'generate:completed': function (settings) {
+      $('form', this.$el)[0].reset();
     }
   },
 });
@@ -226,4 +239,9 @@ ipcRenderer.on('did-run-project', function (e, args) {
 
 ipcRenderer.on('did-stop-project', function (e, args) {
   state.isRunning = false;
+});
+
+// Generate
+ipcRenderer.on('generate:completed', function (e, settings) {
+  app.$broadcast('generate:completed', settings);
 });

@@ -50,7 +50,7 @@ app.on('activate', function () {
 });
 
 app.on('ready', function () {
-	mainWindow = createMainWindow();
+  mainWindow = createMainWindow();
 
 
 	// Collider
@@ -215,6 +215,13 @@ app.on('ready', function () {
           });
         });
       });
+    });
+  });
+
+  ipcMain.on('generate', function (e, settings) {
+    cmds.generate(projectDir, settings, function (err) {
+      if (err) throw err;
+      mainWindow.webContents.send('generate:completed', settings);
     });
   });
 
