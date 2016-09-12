@@ -34,7 +34,7 @@
         <div v-if="state.isLoaded" class="main__inner">
             <div class="header">
               <h1>{{ state.project.name }}</h1>
-              <p>{{ state.project.author }}</p>
+              <p>Author: <span contenteditable="">{{ state.project.author }}</span></p>
               <p>Location: <a v-on:click.prevent="showItem(state.location.abs)" href="#">{{ state.location.rel }}</a></p>
 
               <div class="main__nav">
