@@ -1,5 +1,13 @@
 'use strict';
 
+// TEMPORARY
+////////////////////////////////////////////////////////////////////////////////.
+
+process.env.HTTP_PROXY = 'http://www-cache.reith.bbc.co.uk:80';
+process.env.HTTPS_PROXY = 'http://www-cache.reith.bbc.co.uk:80';
+
+////////////////////////////////////////////////////////////////////////////////.
+
 var collider = require('./lib/collider');
 var cmds = require('./lib/commands');
 var matter = require('./lib/matter');
