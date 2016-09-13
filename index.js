@@ -9,6 +9,7 @@ var pkg = require('./package.json');
 var electron = require('electron');
 var ipcRenderer = electron.ipcRenderer;
 var shell = electron.shell;
+var remote = electron.remote;
 
 var tildify = require('tildify');
 var Vue = require('vue');
@@ -98,7 +99,7 @@ Vue.component('workspace-generate', {
   methods: {
     generate: function () {
       this.send('generate', {
-        type: this.type,
+        type: `${this.type}s`, // 'atom' becomes 'atoms'
         name: this.name,
         locale: this.locale,
         usesData: this.usesData,
@@ -109,6 +110,12 @@ Vue.component('workspace-generate', {
   events: {
     'generate:completed': function (settings) {
       $('form', this.$el)[0].reset();
+      remote.dialog.showMessageBox(remote.getCurrentWindow(), {
+        type: 'info',
+        buttons: ['Okay'],
+        defaultId: 0,
+        message: `A new component called ${settings.name} was added to ${settings.type} in the ${settings.locale} Matter library.`,
+      });
     }
   },
 });
